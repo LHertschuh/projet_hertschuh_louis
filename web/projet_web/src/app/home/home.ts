@@ -64,11 +64,7 @@ export class Home implements OnInit, OnDestroy {
         }));
         this.isLoading = false;
         // Forcer la détection de changement
-        tsearchSubject.next(this.searchQuery);
-  }
-
-  ngOnDestroy(): void {
-    this.searchSubject.completeChanges();
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Erreur lors du chargement des pollutions:', error);
@@ -79,7 +75,11 @@ export class Home implements OnInit, OnDestroy {
   }
 
   onSearchChange(): void {
-    this.loadPollutions();
+    this.searchSubject.next(this.searchQuery);
+  }
+
+  ngOnDestroy(): void {
+    this.searchSubject.complete();
   }
 
   private getRelativeTime(date: string): string {
