@@ -1,0 +1,19 @@
+<nav class="navbar">
+  <div class="navbar-left"></div>
+  
+  <div class="navbar-center">
+    <h1 class="logo" routerLink="/">Pollution</h1>
+  </div>
+  
+  <div class="navbar-right">
+    <ng-container *ngIf="isAuthenticated$ | async; else notAuthenticated">
+      <span class="user-name">{{ (user$ | async)?.nom }}</span>
+      <button class="btn btn-logout" (click)="logout()">Déconnexion</button>
+    </ng-container>
+    
+    <ng-template #notAuthenticated>
+      <button class="btn btn-login" routerLink="/login">Se connecter</button>
+      <button class="btn btn-signup" routerLink="/signup">S'inscrire</button>
+    </ng-template>
+  </div>
+</nav>
