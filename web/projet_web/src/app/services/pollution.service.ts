@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class PollutionService {
-  private apiUrl = 'http://localhost:3000/api/pollution';
+  private apiUrl = 'https://projet-hertschuh-louis-api.onrender.com/api/pollution';
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 

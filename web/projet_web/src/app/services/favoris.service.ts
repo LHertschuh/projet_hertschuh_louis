@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class FavorisService {
-  private apiUrl = 'http://localhost:3000/api/favoris';
+  private apiUrl = 'https://projet-hertschuh-louis-api.onrender.com/api/favoris';
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 

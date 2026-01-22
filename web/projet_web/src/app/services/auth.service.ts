@@ -9,7 +9,7 @@ import { AuthState } from '../store/auth.state';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/api/utilisateur';
+  private apiUrl = 'https://projet-hertschuh-louis-api.onrender.com/api/utilisateur';
 
   constructor(private http: HttpClient, private store: Store) {}
 
