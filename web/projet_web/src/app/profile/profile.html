@@ -1,0 +1,87 @@
+<div class="profile-container">
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="loading">
+    <div class="spinner"></div>
+    <p>Chargement...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Profile Content -->
+  <div *ngIf="!isLoading && currentUser" class="profile-content">
+    <!-- Header -->
+    <div class="profile-header">
+      <div class="profile-info">
+        <div class="avatar">{{ currentUser.nom?.charAt(0).toUpperCase() }}</div>
+        <div class="user-details">
+          <h1>{{ currentUser.nom }}</h1>
+          <p class="email">{{ currentUser.email }}</p>
+        </div>
+      </div>
+      <div class="profile-stats">
+        <div class="stat">
+          <span class="stat-value">{{ pollutions.length }}</span>
+          <span class="stat-label">Pollution{{ pollutions.length > 1 ? 's' : '' }} signalée{{ pollutions.length > 1 ? 's' : '' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pollutions List -->
+    <div class="pollutions-section">
+      <h2>Mes pollutions signalées</h2>
+      
+      <div *ngIf="pollutions.length === 0" class="empty-state">
+        <div class="empty-icon">📍</div>
+        <p>Vous n'avez pas encore signalé de pollution</p>
+        <button class="btn btn-create" routerLink="/pollution/create">
+          ➕ Signaler une pollution
+        </button>
+      </div>
+
+      <div *ngIf="pollutions.length > 0" class="pollutions-grid">
+        <div *ngFor="let pollution of pollutions" 
+             class="pollution-card"
+             [routerLink]="['/pollution', pollution.IdPollution]">
+          
+          <!-- Image -->
+          <div class="card-image">
+            <img *ngIf="pollution.PhotoUrl" 
+                 [src]="pollution.PhotoUrl" 
+                 [alt]="pollution.Titre" />
+            <div *ngIf="!pollution.PhotoUrl" class="card-placeholder">
+              <span class="placeholder-icon">{{ pollution.icon }}</span>
+            </div>
+            <span class="type-badge">{{ pollution.icon }} {{ pollution.TypePollution }}</span>
+          </div>
+
+          <!-- Content -->
+          <div class="card-content">
+            <h3 class="card-title">{{ pollution.Titre }}</h3>
+            <p class="card-description">{{ pollution.Description }}</p>
+            
+            <div class="card-meta">
+              <span class="meta-item">📍 {{ pollution.Lieu }}</span>
+              <span class="meta-item">🕒 {{ pollution.relativeTime }}</span>
+            </div>
+
+            <!-- Actions -->
+            <div class="card-actions">
+              <button class="btn btn-edit" 
+                      [routerLink]="['/pollution', pollution.IdPollution, 'edit']"
+                      (click)="$event.stopPropagation()">
+                ✏️ Modifier
+              </button>
+              <button class="btn btn-delete" 
+                      (click)="deletePollution(pollution, $event)">
+                🗑️ Supprimer
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

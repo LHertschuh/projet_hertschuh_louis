@@ -74,6 +74,40 @@
   box-shadow: 0 5px 20px rgba(78, 204, 163, 0.4);
 }
 
+.btn-create {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  color: #1a1a2e;
+}
+
+.btn-create:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(251, 191, 36, 0.4);
+}
+
+.btn-favoris {
+  background: rgba(255, 215, 0, 0.1);
+  color: #ffd700;
+  border: 2px solid rgba(255, 215, 0, 0.3);
+}
+
+.btn-favoris:hover {
+  background: rgba(255, 215, 0, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3);
+}
+
+.btn-profile {
+  background: rgba(78, 204, 163, 0.1);
+  color: #4ecca3;
+  border: 2px solid rgba(78, 204, 163, 0.3);
+}
+
+.btn-profile:hover {
+  background: rgba(78, 204, 163, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(78, 204, 163, 0.3);
+}
+
 .user-name {
   color: #ffffff;
   font-size: 1rem;

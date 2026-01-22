@@ -1,0 +1,108 @@
+<div class="detail-container">
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="loading">
+    <div class="spinner"></div>
+    <p>Chargement...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="errorMessage" class="error-container">
+    <div class="error-icon">❌</div>
+    <h2>{{ errorMessage }}</h2>
+    <button class="btn btn-back" (click)="goBack()">← Retour à l'accueil</button>
+  </div>
+
+  <!-- Detail -->
+  <div *ngIf="pollution && !isLoading" class="detail-card">
+    <!-- Header -->
+    <div class="detail-header">
+      <button class="btn-back-icon" (click)="goBack()">← Retour</button>
+      <span class="type-badge">{{ getPollutionIcon(pollution.TypePollution) }} {{ pollution.TypePollution }}</span>
+      
+      <!-- Bouton Favoris -->
+      <button class="btn btn-favorite" 
+              (click)="toggleFavorite()" 
+              [class.is-favorite]="isFavorite"
+              [disabled]="isCheckingFavorite">
+        {{ isFavorite ? '⭐ Retirer des favoris' : '☆ Ajouter aux favoris' }}
+      </button>
+      
+      <!-- Actions (modification/suppression) -->
+      <div *ngIf="canEditPollution()" class="action-buttons">
+        <button class="btn btn-edit" [routerLink]="['/pollution', pollution.IdPollution, 'edit']">
+          ✏️ Modifier
+        </button>
+        <button class="btn btn-delete" (click)="deletePollution()">
+          🗑️ Supprimer
+        </button>
+      </div>
+    </div>
+
+    <!-- Image -->
+    <div *ngIf="pollution.PhotoUrl" class="detail-image">
+      <img [src]="pollution.PhotoUrl" [alt]="pollution.Titre" />
+    </div>
+    <div *ngIf="!pollution.PhotoUrl" class="detail-placeholder">
+      <div class="placeholder-icon">{{ getPollutionIcon(pollution.TypePollution) }}</div>
+      <p>Aucune photo disponible</p>
+    </div>
+
+    <!-- Content -->
+    <div class="detail-content">
+      <h1 class="detail-title">{{ pollution.Titre }}</h1>
+      
+      <div class="detail-meta">
+        <span class="meta-item">
+          🕒 {{ getRelativeTime(pollution.CreeLe) }}
+        </span>
+        <span class="meta-item">
+          📅 {{ pollution.DateObservation | date:'dd/MM/yyyy' }}
+        </span>
+      </div>
+
+      <!-- Description -->
+      <div class="detail-section">
+        <h3>📝 Description</h3>
+        <p class="description-text">{{ pollution.Description }}</p>
+      </div>
+
+      <!-- Localisation -->
+      <div class="detail-section">
+        <h3>📍 Localisation</h3>
+        <div class="location-info">
+          <p class="location-address">{{ pollution.Lieu }}</p>
+          <div class="coordinates">
+            <span>🌍 Latitude: {{ pollution.Latitude | number:'1.6-6' }}</span>
+            <span>🌍 Longitude: {{ pollution.Longitude | number:'1.6-6' }}</span>
+          </div>
+          <button class="btn btn-maps" (click)="openInMaps()">
+            🗺️ Voir sur Google Maps
+          </button>
+        </div>
+      </div>
+
+      <!-- Informations supplémentaires -->
+      <div class="detail-section">
+        <h3>ℹ️ Informations</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Type de pollution</span>
+            <span class="info-value">{{ pollution.TypePollution }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Date d'observation</span>
+            <span class="info-value">{{ pollution.DateObservation | date:'dd MMMM yyyy' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Créé le</span>
+            <span class="info-value">{{ pollution.CreeLe | date:'dd/MM/yyyy à HH:mm' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Dernière mise à jour</span>
+            <span class="info-value">{{ pollution.MisAJourLe | date:'dd/MM/yyyy à HH:mm' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

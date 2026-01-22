@@ -4,12 +4,40 @@ import { InitAuth, SetToken, ClearToken, SetUser, ClearUser } from './auth.actio
 import { AuthStateModel } from './auth.state.model';
 import { CookieService } from 'ngx-cookie-service';
 
+// Fonction pour charger l'état initial depuis les cookies
+function getInitialAuthState(): AuthStateModel {
+  if (typeof document !== 'undefined') {
+    try {
+      // Lire directement les cookies
+      const cookies = document.cookie.split(';').reduce((acc: any, cookie) => {
+        const [key, value] = cookie.trim().split('=');
+        acc[key] = value;
+        return acc;
+      }, {});
+      
+      const token = cookies['auth_token'] || null;
+      const userStr = cookies['auth_user'];
+      let user = null;
+      
+      if (userStr) {
+        try {
+          user = JSON.parse(decodeURIComponent(userStr));
+        } catch (e) {
+          // Ignorer les erreurs de parsing
+        }
+      }
+      
+      return { token, user };
+    } catch (e) {
+      return { token: null, user: null };
+    }
+  }
+  return { token: null, user: null };
+}
+
 @State<AuthStateModel>({
   name: 'auth',
-  defaults: {
-    token: null,
-    user: null
-  }
+  defaults: getInitialAuthState()
 })
 @Injectable()
 export class AuthState {
@@ -41,7 +69,6 @@ export class AuthState {
         try {
           user = JSON.parse(userStr);
         } catch (e) {
-          console.error('Erreur parsing user cookie:', e);
           // Supprimer le cookie corrompu
           this.cookieService.delete('auth_user', '/');
         }
@@ -49,7 +76,6 @@ export class AuthState {
       
       ctx.patchState({ token, user });
     } catch (error) {
-      console.error('Erreur lors de l\'initialisation de l\'auth:', error);
       ctx.patchState({ token: null, user: null });
     }
   }
@@ -65,13 +91,11 @@ export class AuthState {
 
   @Action(ClearToken)
   clearToken(ctx: StateContext<AuthStateModel>) {
-    console.log('Action ClearToken appelée');
     // Supprimer le cookie
     this.cookieService.delete('auth_token', '/');
     ctx.patchState({
       token: null
     });
-    console.log('Token supprimé, nouveau state:', ctx.getState());
   }
 
   @Action(SetUser)
@@ -85,12 +109,10 @@ export class AuthState {
 
   @Action(ClearUser)
   clearUser(ctx: StateContext<AuthStateModel>) {
-    console.log('Action ClearUser appelée');
     // Supprimer le cookie
     this.cookieService.delete('auth_user', '/');
     ctx.patchState({
       user: null
     });
-    console.log('User supprimé, nouveau state:', ctx.getState());
   }
 }

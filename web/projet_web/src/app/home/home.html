@@ -4,49 +4,51 @@
     <p class="subtitle">Participez à la protection de l'environnement en signalant les pollutions</p>
   </div>
 
-  <div class="pollutions-grid">
-    <!-- Les cards de pollution seront affichées ici dynamiquement -->
-    <div class="pollution-card">
-      <div class="card-image">
-        <div class="placeholder-image">📷</div>
-      </div>
-      <div class="card-content">
-        <h3>Exemple de pollution</h3>
-        <p class="location">📍 Paris, France</p>
-        <p class="description">Description de la pollution signalée par les utilisateurs...</p>
-        <div class="card-footer">
-          <span class="date">Il y a 2 heures</span>
-          <span class="author">Par Jean D.</span>
-        </div>
-      </div>
-    </div>
+  <!-- Message d'erreur -->
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
 
-    <div class="pollution-card">
-      <div class="card-image">
-        <div class="placeholder-image">📷</div>
-      </div>
-      <div class="card-content">
-        <h3>Déchets sauvages</h3>
-        <p class="location">📍 Lyon, France</p>
-        <p class="description">Accumulation de déchets dans le parc...</p>
-        <div class="card-footer">
-          <span class="date">Il y a 5 heures</span>
-          <span class="author">Par Marie L.</span>
-        </div>
-      </div>
-    </div>
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="loading">
+    <div class="spinner"></div>
+    <p>Chargement des signalements...</p>
+  </div>
 
-    <div class="pollution-card">
+  <!-- Message si aucune pollution -->
+  <div *ngIf="!isLoading && pollutions.length === 0 && !errorMessage" class="empty-state">
+    <div class="empty-icon">🌱</div>
+    <h3>Aucun signalement pour le moment</h3>
+    <p>Soyez le premier à signaler une pollution !</p>
+    <button *ngIf="isLoggedIn" class="btn btn-create" routerLink="/pollution/create">
+      ➕ Créer un signalement
+    </button>
+    <button *ngIf="!isLoggedIn" class="btn btn-login" routerLink="/login">
+      Se connecter pour signaler
+    </button>
+  </div>
+
+  <!-- Grille des pollutions -->
+  <div *ngIf="!isLoading && pollutions.length > 0" class="pollutions-grid">
+    <div *ngFor="let pollution of pollutions" class="pollution-card" [routerLink]="['/pollution', pollution.IdPollution]">
       <div class="card-image">
-        <div class="placeholder-image">📷</div>
+        <div *ngIf="pollution.PhotoUrl" class="pollution-image">
+          <img [src]="pollution.PhotoUrl" [alt]="pollution.Titre" />
+        </div>
+        <div *ngIf="!pollution.PhotoUrl" class="placeholder-image">
+          {{ pollution.icon }}
+        </div>
+        <span class="pollution-type-badge">{{ pollution.TypePollution }}</span>
       </div>
       <div class="card-content">
-        <h3>Pollution de l'eau</h3>
-        <p class="location">📍 Marseille, France</p>
-        <p class="description">Pollution observée dans la rivière...</p>
+        <h3>{{ pollution.Titre }}</h3>
+        <p class="location">📍 {{ pollution.Lieu }}</p>
+        <p class="description">{{ pollution.Description }}</p>
         <div class="card-footer">
-          <span class="date">Il y a 1 jour</span>
-          <span class="author">Par Alex M.</span>
+          <span class="date">{{ pollution.relativeTime }}</span>
+          <span class="coordinates" title="Coordonnées GPS">
+            🌍 {{ pollution.Latitude | number:'1.4-4' }}, {{ pollution.Longitude | number:'1.4-4' }}
+          </span>
         </div>
       </div>
     </div>

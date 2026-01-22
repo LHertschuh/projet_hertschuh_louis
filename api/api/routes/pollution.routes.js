@@ -8,12 +8,15 @@ module.exports = app => {
   
     // Routes publiques
     router.get("/", pollution.get);
-    router.get("/:id", pollution.getById);
     
     // Routes protégées (nécessitent un token JWT)
+    router.get("/user/:userId", verifyToken, pollution.getByUserId);
     router.post("/", verifyToken, pollution.create);
     router.put("/:id", verifyToken, pollution.update);
     router.delete("/:id", verifyToken, pollution.delete);
+    
+    // Route publique (doit être après /user/:userId pour éviter les conflits)
+    router.get("/:id", pollution.getById);
   
     app.use('/api/pollution', router);
   };

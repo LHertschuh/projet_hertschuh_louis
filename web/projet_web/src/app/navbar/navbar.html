@@ -7,7 +7,9 @@
   
   <div class="navbar-right">
     <ng-container *ngIf="isAuthenticated$ | async; else notAuthenticated">
-      <span class="user-name">{{ (user$ | async)?.nom }}</span>
+      <button class="btn btn-create" routerLink="/pollution/create">➕ Signaler</button>
+      <button class="btn btn-favoris" routerLink="/favoris">⭐ Favoris</button>
+      <button class="btn btn-profile" routerLink="/profile">👤 {{ (user$ | async)?.nom }}</button>
       <button class="btn btn-logout" (click)="logout()">Déconnexion</button>
     </ng-container>
     

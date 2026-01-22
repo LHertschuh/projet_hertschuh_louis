@@ -28,6 +28,26 @@ CREATE TABLE public.Pollution (
         ON DELETE SET NULL
 );
 
+CREATE TABLE public.Favoris (
+    IdFavoris SERIAL PRIMARY KEY,
+    IdUtilisateur INT NOT NULL,
+    IdPollution INT NOT NULL,
+    CreeLe TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+
+    CONSTRAINT fk_favoris_user
+        FOREIGN KEY (IdUtilisateur)
+        REFERENCES public.Utilisateur (IdUtilisateur)
+        ON DELETE CASCADE,
+    
+    CONSTRAINT fk_favoris_pollution
+        FOREIGN KEY (IdPollution)
+        REFERENCES public.Pollution (IdPollution)
+        ON DELETE CASCADE,
+    
+    -- Empêcher les doublons
+    CONSTRAINT unique_favoris UNIQUE (IdUtilisateur, IdPollution)
+);
+
 
 INSERT INTO public.Pollution 
 (Titre, TypePollution, Description, DateObservation, Lieu, Latitude, Longitude, PhotoUrl)

@@ -1,0 +1,182 @@
+<div class="create-pollution-container">
+  <div class="form-card">
+    <h2>✏️ Modifier la pollution</h2>
+    <p class="subtitle">Mettez à jour les informations de cette pollution</p>
+
+    <!-- Messages d'erreur/succès -->
+    <div *ngIf="errorMessage" class="message error">{{ errorMessage }}</div>
+    <div *ngIf="successMessage" class="message success">{{ successMessage }}</div>
+
+    <form (ngSubmit)="onSubmit()" #pollutionForm="ngForm">
+      <!-- Informations sur le découvreur -->
+      <div class="form-section">
+        <h3>👤 Découvreur</h3>
+        <div class="form-group">
+          <label>Nom</label>
+          <input 
+            type="text" 
+            [value]="currentUser?.nom || 'Utilisateur anonyme'" 
+            disabled 
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <!-- Informations sur la pollution -->
+      <div class="form-section">
+        <h3>🗑️ Détails de la pollution</h3>
+        
+        <div class="form-group">
+          <label for="titre">Titre *</label>
+          <input 
+            type="text" 
+            id="titre" 
+            name="titre" 
+            [(ngModel)]="titre" 
+            required 
+            class="form-control"
+            placeholder="Ex: Dépôt de déchets à côté du parc"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="typePollution">Type de pollution *</label>
+          <select 
+            id="typePollution" 
+            name="typePollution" 
+            [(ngModel)]="typePollution" 
+            required 
+            class="form-control"
+          >
+            <option value="">-- Sélectionnez un type --</option>
+            <option *ngFor="let type of typesPollution" [value]="type">{{ type }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description *</label>
+          <textarea 
+            id="description" 
+            name="description" 
+            [(ngModel)]="description" 
+            required 
+            rows="4" 
+            class="form-control"
+            placeholder="Décrivez la pollution observée en détail..."
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="dateObservation">Date d'observation *</label>
+          <input 
+            type="date" 
+            id="dateObservation" 
+            name="dateObservation" 
+            [(ngModel)]="dateObservation" 
+            required 
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <!-- Localisation -->
+      <div class="form-section">
+        <h3>📍 Localisation</h3>
+        
+        <div class="form-group">
+          <label for="lieu">Adresse / Lieu *</label>
+          <input 
+            type="text" 
+            id="lieu" 
+            name="lieu" 
+            [(ngModel)]="lieu" 
+            required 
+            class="form-control"
+            placeholder="Ex: 123 Rue de la République, Paris"
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="latitude">Latitude *</label>
+            <input 
+              type="number" 
+              id="latitude" 
+              name="latitude" 
+              [(ngModel)]="latitude" 
+              step="0.000001" 
+              required 
+              class="form-control"
+              placeholder="48.8566"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="longitude">Longitude *</label>
+            <input 
+              type="number" 
+              id="longitude" 
+              name="longitude" 
+              [(ngModel)]="longitude" 
+              step="0.000001" 
+              required 
+              class="form-control"
+              placeholder="2.3522"
+            />
+          </div>
+        </div>
+
+        <button 
+          type="button" 
+          (click)="getCurrentLocation()" 
+          class="btn btn-secondary"
+          [disabled]="isLoading"
+        >
+          📍 Obtenir ma position GPS
+        </button>
+      </div>
+
+      <!-- Photo -->
+      <div class="form-section">
+        <h3>📷 Photo</h3>
+        
+        <div class="form-group">
+          <label for="photo">Ajouter une photo (optionnel)</label>
+          <input 
+            type="file" 
+            id="photo" 
+            name="photo" 
+            (change)="onFileSelected($event)" 
+            accept="image/*" 
+            class="form-control"
+          />
+          <small class="help-text">Formats acceptés: JPG, PNG, GIF - Max 50MB</small>
+          <div *ngIf="photoUrl" class="photo-preview">
+            <img [src]="photoUrl" alt="Aperçu de l'image" class="preview-image" />
+            <p class="preview-text">✅ Image sélectionnée</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Boutons d'action -->
+      <div class="form-actions">
+        <button 
+          type="button" 
+          (click)="cancel()" 
+          class="btn btn-cancel"
+          [disabled]="isLoading"
+        >
+          Annuler
+        </button>
+        <button 
+          type="submit" 
+          class="btn btn-submit"
+          [disabled]="isLoading || !pollutionForm.valid"
+        >
+          <span *ngIf="!isLoading">🚀 Créer le signalement</span>
+          <span *ngIf="isLoading">⏳ Création en cours...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

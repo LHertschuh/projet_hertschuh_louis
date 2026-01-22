@@ -1,0 +1,66 @@
+<div class="favoris-container">
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="loading">
+    <div class="spinner"></div>
+    <p>Chargement...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Favoris Content -->
+  <div *ngIf="!isLoading" class="favoris-content">
+    <div class="favoris-header">
+      <h1>⭐ Mes Favoris</h1>
+      <p class="subtitle">Vos pollutions favorites</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="pollutions.length === 0" class="empty-state">
+      <div class="empty-icon">⭐</div>
+      <p>Vous n'avez pas encore de pollution favorite</p>
+      <button class="btn btn-primary" routerLink="/">
+        📍 Découvrir les pollutions
+      </button>
+    </div>
+
+    <!-- Favoris Grid -->
+    <div *ngIf="pollutions.length > 0" class="pollutions-grid">
+      <div *ngFor="let pollution of pollutions" 
+           class="pollution-card"
+           [routerLink]="['/pollution', pollution.IdPollution]">
+        
+        <!-- Image -->
+        <div class="card-image">
+          <img *ngIf="pollution.PhotoUrl" 
+               [src]="pollution.PhotoUrl" 
+               [alt]="pollution.Titre" />
+          <div *ngIf="!pollution.PhotoUrl" class="card-placeholder">
+            <span class="placeholder-icon">{{ pollution.icon }}</span>
+          </div>
+          <span class="type-badge">{{ pollution.icon }} {{ pollution.TypePollution }}</span>
+          
+          <!-- Bouton supprimer favori -->
+          <button class="btn-remove-favorite" 
+                  (click)="removeFavoris(pollution, $event)"
+                  title="Retirer des favoris">
+            ❌
+          </button>
+        </div>
+
+        <!-- Content -->
+        <div class="card-content">
+          <h3 class="card-title">{{ pollution.Titre }}</h3>
+          <p class="card-description">{{ pollution.Description }}</p>
+          
+          <div class="card-meta">
+            <span class="meta-item">📍 {{ pollution.Lieu }}</span>
+            <span class="meta-item">🕒 {{ pollution.relativeTime }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

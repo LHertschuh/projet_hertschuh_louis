@@ -141,3 +141,20 @@ exports.delete = (req, res) => {
       });
     });
 };
+
+exports.getByUserId = (req, res) => {
+  const userId = req.params.userId;
+
+  Pollution.findAll({
+    where: { IdUtilisateur: userId },
+    order: [['CreeLe', 'DESC']]
+  })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: err.message || "Erreur lors de la récupération des pollutions de l'utilisateur"
+      });
+    });
+};

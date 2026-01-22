@@ -20,6 +20,27 @@ db.sequelize = sequelize;
 
 db.utilisateurs = require("./utilisateurs.model.js")(sequelize, Sequelize);
 db.pollution = require("./pollution.model.js")(sequelize, Sequelize);
+db.favoris = require("./favoris.model.js")(sequelize, Sequelize);
 
+// Définir les associations
+db.favoris.belongsTo(db.pollution, {
+  foreignKey: 'IdPollution',
+  as: 'pollution'
+});
+
+db.pollution.hasMany(db.favoris, {
+  foreignKey: 'IdPollution',
+  as: 'favoris'
+});
+
+db.favoris.belongsTo(db.utilisateurs, {
+  foreignKey: 'IdUtilisateur',
+  as: 'utilisateur'
+});
+
+db.utilisateurs.hasMany(db.favoris, {
+  foreignKey: 'IdUtilisateur',
+  as: 'favoris'
+});
 
 module.exports = db;
