@@ -2,6 +2,20 @@
   <div class="header">
     <h1>Signalements de pollution</h1>
     <p class="subtitle">Participez à la protection de l'environnement en signalant les pollutions</p>
+    
+    <!-- Barre de recherche -->
+    <div class="search-container">
+      <input 
+        type="text" 
+        class="search-input"
+        placeholder="🔍 Rechercher par titre, description, lieu ou type..."
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="onSearchChange()"
+      />
+      <button *ngIf="searchQuery" class="clear-search" (click)="searchQuery = ''; onSearchChange()">
+        ✕
+      </button>
+    </div>
   </div>
 
   <!-- Message d'erreur -->
@@ -17,13 +31,13 @@
 
   <!-- Message si aucune pollution -->
   <div *ngIf="!isLoading && pollutions.length === 0 && !errorMessage" class="empty-state">
-    <div class="empty-icon">🌱</div>
-    <h3>Aucun signalement pour le moment</h3>
-    <p>Soyez le premier à signaler une pollution !</p>
-    <button *ngIf="isLoggedIn" class="btn btn-create" routerLink="/pollution/create">
+    <div class="empty-icon">{{ searchQuery ? '🔍' : '🌱' }}</div>
+    <h3>{{ searchQuery ? 'Aucun résultat trouvé' : 'Aucun signalement pour le moment' }}</h3>
+    <p>{{ searchQuery ? 'Essayez avec d\'autres mots-clés' : 'Soyez le premier à signaler une pollution !' }}</p>
+    <button *ngIf="!searchQuery && isLoggedIn" class="btn btn-create" routerLink="/pollution/create">
       ➕ Créer un signalement
     </button>
-    <button *ngIf="!isLoggedIn" class="btn btn-login" routerLink="/login">
+    <button *ngIf="!searchQuery && !isLoggedIn" class="btn btn-login" routerLink="/login">
       Se connecter pour signaler
     </button>
   </div>

@@ -11,8 +11,12 @@ export class PollutionService {
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
-  getAll(): Observable<any> {
-    return this.http.get(`${this.apiUrl}`);
+  getAll(searchQuery?: string): Observable<any> {
+    let url = `${this.apiUrl}`;
+    if (searchQuery) {
+      url += `?search=${encodeURIComponent(searchQuery)}`;
+    }
+    return this.http.get(url);
   }
 
   getById(id: number): Observable<any> {

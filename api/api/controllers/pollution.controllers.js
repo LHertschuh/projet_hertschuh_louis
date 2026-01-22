@@ -3,7 +3,27 @@ const Pollution = db.pollution;
 const Op = db.Sequelize.Op;
 
 exports.get = (req, res) => {
-  Pollution.findAll()
+  const searchQuery = req.query.search;
+  
+  let whereClause = {};
+  
+  if (searchQuery && searchQuery.trim().length > 0) {
+    // Recherche dans plusieurs champs
+    const searchTerm = searchQuery.trim();
+    whereClause = {
+      [Op.or]: [
+        { Titre: { [Op.iLike]: `%${searchTerm}%` } },
+        { Description: { [Op.iLike]: `%${searchTerm}%` } },
+        { Lieu: { [Op.iLike]: `%${searchTerm}%` } },
+        { TypePollution: { [Op.iLike]: `%${searchTerm}%` } }
+      ]
+    };
+  }
+  
+  Pollution.findAll({ 
+    where: whereClause,
+    order: [['CreeLe', 'DESC']]
+  })
     .then(data => {
       res.send(data);
     })
