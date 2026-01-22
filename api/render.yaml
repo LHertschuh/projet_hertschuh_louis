@@ -1,8 +1,9 @@
 services:
   - type: web
-    name: angular-node-monorepo
-    env: docker
-    dockerContext: .
-    plan: free
-    region: frankfurt
-    dockerfilePath: ./Dockerfile
+    name: pollution-api
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
